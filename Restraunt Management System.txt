@@ -1,0 +1,151 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+struct menuItem {
+    int id;
+    string name;
+    float price;
+};
+
+struct cartItem {
+    int id;
+    float price;
+    string name;
+    int quantity;
+};
+
+const int MAX_MENU = 5;
+menuItem menu[MAX_MENU] = {
+    {1, "Pasta", 920},
+    {2, "Pizza", 1200},
+    {3, "Lasagna", 670},
+    {4, "Soda", 50},
+    {5, "Coffee", 80}
+};
+
+cartItem cart[10];
+int cartSize = 0;
+
+void rest_name() {
+    cout << "=== WELCOME TO THE ITALIA RESTAURANT ===" << endl;
+    cout << "------ Finest italian taste ------" << endl << endl;
+}
+
+void displayMenu() {
+    cout << endl << "- MENU -" << endl;
+    for(int i = 0; i < MAX_MENU; i++) {
+        cout << "ID: " << menu[i].id << " | " << menu[i].name << " - Rs. " << menu[i].price << endl;
+    }
+    cout << endl;
+}
+
+void addToCart() { 
+    int itemId, quantity;
+    displayMenu();
+    cout << "Enter item ID to add to cart: ";
+    cin >> itemId;
+    
+    if(itemId < 1 || itemId > MAX_MENU) {
+        cout << "Invalid item ID!" << endl;
+        return;
+    }
+    
+    cout << "Enter quantity: ";
+    cin >> quantity;
+    
+    if(quantity <= 0) {
+        cout << "Quantity should be greater than 0!" << endl;
+        return;
+    }
+    
+    for(int i = 0; i < cartSize; i++) {
+        if(cart[i].id == itemId) {
+            cart[i].quantity += quantity;
+            cout << "Updated quantity in cart!" << endl;
+            return;
+        }
+    } 
+    
+    cart[cartSize].id = itemId;
+    cart[cartSize].name = menu[itemId-1].name;
+    cart[cartSize].price = menu[itemId-1].price;
+    cart[cartSize].quantity = quantity;
+    cartSize++;
+    
+    cout << "Item added to cart!" << endl;
+}
+
+void showCart() {
+    if(cartSize == 0) {
+        cout << "Your cart is empty!" << endl;
+        return;
+    }
+    
+    cout << endl << "- YOUR ORDER -" << endl;
+    for(int i = 0; i < cartSize; i++) {
+        cout << cart[i].name << " x " << cart[i].quantity << " - Rs. " << (cart[i].price * cart[i].quantity) << endl;
+    }
+    cout << endl;
+}
+
+void generateBill() {
+    if(cartSize == 0) {
+        cout << "Your cart is empty!" << endl;
+        return;
+    }
+    
+    showCart();
+    float total = 0;
+    for(int i = 0; i < cartSize; i++) {
+        total += cart[i].price * cart[i].quantity;
+    }
+    
+    cout << "TOTAL: Rs. " << total << endl << endl;
+    cout << "Thank you for your order!!! " << endl;
+}
+
+int main() {
+    string customer_name;
+    int choice;
+    
+    rest_name();
+    
+    cout << "Ciao! Please enter your name: ";
+    getline(cin, customer_name);
+    
+    cout << "Welcome, " << customer_name << "  to the Italia Restaurant!" << endl;
+    
+    do {
+        cout << endl << "PLEASE SELECT AN OPTION:" << endl;
+        cout << "1. Display Menu" << endl;
+        cout << "2. Add Item to Cart" << endl;
+        cout << "3. View My Order" << endl;
+        cout << "4. Generate Bill" << endl;
+        cout << "5. Exit" << endl;
+        cin >> choice;
+        
+        switch(choice) {
+            case 1: 
+                displayMenu(); 
+                break   ;
+            case 2: 
+                addToCart(); 
+                break;
+            case 3: 
+                showCart(); 
+                break;
+            case 4: 
+                generateBill(); 
+                break;
+            case 5: 
+                cout << "Thank you " << customer_name << "! Visit us again!" << endl;
+                break;
+            default:
+                cout << "Invalid choice, please try again!" << endl;
+        }
+    } while(choice != 5);
+    
+    return 0;
+}
+
